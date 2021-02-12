@@ -15,6 +15,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.table.DefaultTableModel;
+
+import java.io.IOException;
+
+import java.util.Arrays;
 
 public class GUI
 {
@@ -22,15 +27,17 @@ public class GUI
     GridBagLayout gridBag = new GridBagLayout();
     GridBagConstraints c = new GridBagConstraints();
     
+    String[] dataTableColNames = {"Map URL", "Artist", "Song Name", "Difficulty Name", "Grade", "Performance Rating",
+                                  "Accuracy", "Speed Rate", "Mods", "Score", "Scroll Speed", "Max Combo", "Ratio"};
     JFrame frame = new JFrame("Quaver Profile Scraper");
     JPanel panel = new JPanel(gridBag); 
    
-    JTextField textField = new JTextField("Profile Link");
-    JTextField textField2 = new JTextField("a test box");
+    JTextField textField = new JTextField("Profile Link", 20);
     
+    DefaultTableModel defaultDataTable = new DefaultTableModel();
+    JTable dataTable= new JTable(defaultDataTable);
     public GUI()
     {   
-        
         // Sets content pane and operation when closing the program.
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,9 +46,11 @@ public class GUI
         frame.add(textField);
         textField.addActionListener(new ProfileFieldListener(textField));
         textField.addFocusListener(new ProfileFieldListener(textField));
-        frame.add(textField2);
-        textField2.addActionListener(new ProfileFieldListener(textField2));
-        textField2.addFocusListener(new ProfileFieldListener(textField2));
+        
+        //dataTable.setBounds(30, 40, 200, 300);
+        
+        frame.add(dataTable);
+        
         // Packs GUI components, maximizes program to screen, and enables the visibility of the program.
         frame.pack();
         frame.setMinimumSize(new Dimension(1080, 720));
@@ -63,7 +72,35 @@ public class GUI
         public void actionPerformed(ActionEvent e)
         {
             System.out.println("action happened");
-            f.setText("cleared");
+            try
+            {  
+                System.out.println(f.getText());
+                WebScraper w = new WebScraper(f.getText());
+                String[][] s = w.returnProfileData();
+                defaultDataTable.setRowCount(0);
+                defaultDataTable = new DefaultTableModel(s, dataTableColNames);
+                for(String[] col : s)
+                {
+                    //defaultDataTable.addRow(col);
+                    System.out.println(Arrays.deepToString(col));
+                }
+                defaultDataTable.insertRow(0, dataTableColNames);
+                //defaultDataTable.addColumn(dataTableColNames);
+                //defaultDataTable.setColumnCount(15);
+                frame.remove(dataTable);
+                dataTable = new JTable(defaultDataTable);
+                frame.add(dataTable);
+                dataTable.repaint();
+                System.out.print("Repainted");
+                frame.revalidate();
+                frame.repaint();
+                System.out.println("Row Count: " + dataTable.getRowCount() + ". Column Count: " + dataTable.getColumnCount());
+            }
+            catch(IOException error)
+            {
+                // Do nothing
+            }
+            f.setText("");
         }
         
         @Override
