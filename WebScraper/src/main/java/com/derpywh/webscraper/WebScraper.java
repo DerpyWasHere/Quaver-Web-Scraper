@@ -40,7 +40,7 @@ public class WebScraper
         for(int i = 0; i < profileData.length; i++)
         {
             profileData[i] = returnProfileData(i); 
-            System.out.println(Arrays.deepToString(profileData));
+            //System.out.println(Arrays.deepToString(profileData));
         }
         return profileData;
     }
@@ -201,11 +201,11 @@ public class WebScraper
         return e.text();
     }
     
-    private int getScrollSpeed(int index)
+    private double getScrollSpeed(int index)
     {
         Document d = Jsoup.parse(scoreValues.get(index));
         Elements e = d.select("span").eq(1);
-        return Integer.parseInt(e.text());
+        return Double.parseDouble(e.text());
     }
     
     private String getMaxCombo(int index)

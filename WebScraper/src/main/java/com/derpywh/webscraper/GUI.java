@@ -71,7 +71,7 @@ public class GUI
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            System.out.println("action happened");
+            //System.out.println("action happened");
             try
             {  
                 System.out.println(f.getText());
@@ -82,19 +82,37 @@ public class GUI
                 for(String[] col : s)
                 {
                     //defaultDataTable.addRow(col);
-                    System.out.println(Arrays.deepToString(col));
+                    //System.out.println(Arrays.deepToString(col));
                 }
                 defaultDataTable.insertRow(0, dataTableColNames);
                 //defaultDataTable.addColumn(dataTableColNames);
                 //defaultDataTable.setColumnCount(15);
                 frame.remove(dataTable);
                 dataTable = new JTable(defaultDataTable);
+                
+                // TEMPORARY SOLUTION - WILL FIND A BETTER ONE LATER
+                dataTable.getColumnModel().getColumn(0).setPreferredWidth(300);
+                dataTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+                dataTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+                dataTable.getColumnModel().getColumn(3).setPreferredWidth(200);
+                dataTable.getColumnModel().getColumn(4).setPreferredWidth(50);
+                dataTable.getColumnModel().getColumn(5).setPreferredWidth(115);
+                dataTable.getColumnModel().getColumn(6).setPreferredWidth(75);
+                dataTable.getColumnModel().getColumn(7).setPreferredWidth(75);
+                dataTable.getColumnModel().getColumn(8).setPreferredWidth(50);
+                dataTable.getColumnModel().getColumn(9).setPreferredWidth(75);
+                dataTable.getColumnModel().getColumn(10).setPreferredWidth(80);
+                dataTable.getColumnModel().getColumn(11).setPreferredWidth(75);
+                dataTable.getColumnModel().getColumn(12).setPreferredWidth(50);
+                // TEMPORARY SOLUTION - WILL FIND A BETTER ONE LATER
+                
+                dataTable.doLayout();
                 frame.add(dataTable);
                 dataTable.repaint();
-                System.out.print("Repainted");
+                //System.out.print("Repainted");
                 frame.revalidate();
                 frame.repaint();
-                System.out.println("Row Count: " + dataTable.getRowCount() + ". Column Count: " + dataTable.getColumnCount());
+                //System.out.println("Row Count: " + dataTable.getRowCount() + ". Column Count: " + dataTable.getColumnCount());
             }
             catch(IOException error)
             {
@@ -107,7 +125,7 @@ public class GUI
         public void focusGained(FocusEvent e)
         {
             f.setForeground(Color.BLACK);
-            System.out.println("Focus gained");
+            //System.out.println("Focus gained");
         }
         
         @Override
@@ -115,7 +133,7 @@ public class GUI
         {
             f.setForeground(new Color(115, 118, 128));
             
-            System.out.println("Focus lost");
+            //System.out.println("Focus lost");
         }
     }
 }
