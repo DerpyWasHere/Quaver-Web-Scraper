@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * imagine having license headers kekw
  */
 package com.derpywh.webscraper;
 
@@ -19,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.io.IOException;
 
+import java.util.List;
 import java.util.Arrays;
 
 public class GUI
@@ -27,29 +26,38 @@ public class GUI
     GridBagLayout gridBag = new GridBagLayout();
     GridBagConstraints c = new GridBagConstraints();
     
-    String[] dataTableColNames = {"Map URL", "Artist", "Song Name", "Difficulty Name", "Grade", "Performance Rating",
-                                  "Accuracy", "Speed Rate", "Mods", "Score", "Scroll Speed", "Max Combo", "Ratio"};
+    private final Color GRAY = new Color(115, 118, 128);
+    String[] dataTableColNames = {"Map URL", "Artist", "Song Name", 
+                                  "Difficulty Name", "Grade", "Performance Rating",
+                                  "Accuracy", "Speed Rate", "Mods", 
+                                  "Score", "Scroll Speed", "Max Combo", 
+                                  "Ratio"
+                                 };
+    
     JFrame frame = new JFrame("Quaver Profile Scraper");
     JPanel panel = new JPanel(gridBag); 
    
+    JLabel error = new JLabel("Malformed URL, please enter a valid Quaver profile link. (ex. https://quavergame.com/user/12446)");
     JTextField textField = new JTextField("Profile Link", 20);
+    //JTextField testField = new JTextField("testy boi", 20);
     
     DefaultTableModel defaultDataTable = new DefaultTableModel();
-    JTable dataTable= new JTable(defaultDataTable);
+    JTable dataTable = new JTable(defaultDataTable);
     public GUI()
     {   
         // Sets content pane and operation when closing the program.
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        
-        frame.add(textField);
+        textField.setForeground(GRAY);
+        frame.add(textField, c);
         textField.addActionListener(new ProfileFieldListener(textField));
         textField.addFocusListener(new ProfileFieldListener(textField));
         
+        //frame.add(testField, c);
         //dataTable.setBounds(30, 40, 200, 300);
         
-        frame.add(dataTable);
+        frame.add(dataTable, c);
         
         // Packs GUI components, maximizes program to screen, and enables the visibility of the program.
         frame.pack();
@@ -62,7 +70,8 @@ public class GUI
     
     private class ProfileFieldListener implements ActionListener, FocusListener
     {
-        JTextField f;
+        private boolean firstClick = true;
+        private final JTextField f;
         public ProfileFieldListener(JTextField field)
         {
             f = field;
@@ -74,21 +83,33 @@ public class GUI
             //System.out.println("action happened");
             try
             {  
-                System.out.println(f.getText());
+                frame.remove(error); // why doesnt this throw a nullpointererror
+                
+                //System.out.println(f.getText());
                 WebScraper w = new WebScraper(f.getText());
                 String[][] s = w.returnProfileData();
                 defaultDataTable.setRowCount(0);
-                defaultDataTable = new DefaultTableModel(s, dataTableColNames);
-                for(String[] col : s)
+                defaultDataTable = new DefaultTableModel(s, dataTableColNames) 
                 {
+                    @Override
+                    public boolean isCellEditable(int row, int col) 
+                    {
+                        return false;
+                    }
+                };
+                //for(String[] col : s)
+                //{
                     //defaultDataTable.addRow(col);
                     //System.out.println(Arrays.deepToString(col));
-                }
+                //}
                 defaultDataTable.insertRow(0, dataTableColNames);
                 //defaultDataTable.addColumn(dataTableColNames);
                 //defaultDataTable.setColumnCount(15);
                 frame.remove(dataTable);
                 dataTable = new JTable(defaultDataTable);
+                
+                //dataTable.setFocusable(false);
+                dataTable.setRowSelectionAllowed(false);
                 
                 // TEMPORARY SOLUTION - WILL FIND A BETTER ONE LATER
                 dataTable.getColumnModel().getColumn(0).setPreferredWidth(300);
@@ -106,34 +127,46 @@ public class GUI
                 dataTable.getColumnModel().getColumn(12).setPreferredWidth(50);
                 // TEMPORARY SOLUTION - WILL FIND A BETTER ONE LATER
                 
+                
                 dataTable.doLayout();
                 frame.add(dataTable);
                 dataTable.repaint();
                 //System.out.print("Repainted");
                 frame.revalidate();
                 frame.repaint();
+                
+                f.setText("");
                 //System.out.println("Row Count: " + dataTable.getRowCount() + ". Column Count: " + dataTable.getColumnCount());
             }
-            catch(IOException error)
+            catch(IOException ioException)
             {
                 // Do nothing
             }
-            f.setText("");
+            catch(IllegalArgumentException malformedURL)
+            {
+                frame.add(error, c);
+                frame.revalidate();
+            }
         }
         
         @Override
         public void focusGained(FocusEvent e)
         {
+            if(firstClick)
+            {
+                f.setText("");
+                firstClick = false;
+            }
             f.setForeground(Color.BLACK);
-            //System.out.println("Focus gained");
+            System.out.println("Focus gained");
         }
         
         @Override
         public void focusLost(FocusEvent e)
         {
-            f.setForeground(new Color(115, 118, 128));
+            f.setForeground(GRAY);
             
-            //System.out.println("Focus lost");
+            System.out.println("Focus lost");
         }
     }
 }

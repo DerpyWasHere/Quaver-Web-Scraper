@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * imagine having license headers kekw
  */
 package com.derpywh.webscraper;
 
@@ -25,8 +23,8 @@ public class WebScraper
     String[] notSplitScoreArray = new String[30];
     // Each value in ArrayList songNames and scoreValues corresponds to eachother
     // ex: songNames[0] ≙ scoreValues[0]
-    ArrayList<String> songNames = new ArrayList<String>();
-    ArrayList<String> scoreValues = new ArrayList<String>();
+    ArrayList<String> songNames = new ArrayList<>();
+    ArrayList<String> scoreValues = new ArrayList<>();
     
     public WebScraper(String url) throws IOException
     {
